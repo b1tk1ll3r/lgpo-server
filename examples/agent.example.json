@@ -1,0 +1,11 @@
+{
+  "server_url": "https://gpo-distributor.example.org:8443",
+  "profile": "standalone-servers",
+  "client_token": "CHANGE-ME",
+  "signing_key": "CHANGE-ME",
+  "lgpo_path": "C:\\Program Files\\GPO-Distributor\\LGPO.exe",
+  "state_dir": "C:\\ProgramData\\GPO-Distributor",
+  "poll_interval": "15m",
+  "request_timeout": "15m",
+  "insecure_skip_verify": false
+}

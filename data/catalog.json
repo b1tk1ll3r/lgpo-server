@@ -1,0 +1,21 @@
+{
+  "policies": {
+    "Applocker": {
+      "name": "Applocker",
+      "versions": [
+        {
+          "version": "v20260805-083222-b964f1aaf5",
+          "created_at": "2026-08-05T08:32:22.433020553Z",
+          "artifact_path": "artifacts/Applocker/v20260805-083222-b964f1aaf5.zip",
+          "artifact_sha256": "ca33096a03517dc9cc41f7137344c0fff893467b803d50bb0aae2de9029c43c3",
+          "semantic_sha256": "b964f1aaf5fd37dd7af001504c27884013402591bce8f35811aa474fcc05e1fb",
+          "size": 10132,
+          "file_count": 5,
+          "policy_file_count": 2
+        }
+      ]
+    }
+  },
+  "profiles": {},
+  "clients": {}
+}

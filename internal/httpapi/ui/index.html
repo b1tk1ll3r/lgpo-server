@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>GPO Distributor</title>
+  <link rel="stylesheet" href="/ui/styles.css">
+</head>
+<body>
+  <div id="login-view" class="login-view">
+    <main class="login-card" aria-labelledby="login-title">
+      <div class="brand-mark" aria-hidden="true">GP</div>
+      <p class="eyebrow">Zentrale Richtlinienverwaltung</p>
+      <h1 id="login-title">GPO Distributor</h1>
+      <p class="muted">Melde dich mit dem Admin-Token des Backends an.</p>
+      <form id="login-form" class="stack">
+        <label for="admin-token">Admin-Token</label>
+        <div class="password-field">
+          <input id="admin-token" name="token" type="password" autocomplete="current-password" required autofocus>
+          <button id="toggle-token" class="icon-button" type="button" aria-label="Token anzeigen">Anzeigen</button>
+        </div>
+        <p id="login-error" class="form-error" role="alert"></p>
+        <button class="button primary wide" type="submit">Anmelden</button>
+      </form>
+      <p class="login-hint">Die Browser-Session ist acht Stunden gültig. Das Token wird nicht im Browser gespeichert.</p>
+    </main>
+  </div>
+
+  <div id="app-view" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark small" aria-hidden="true">GP</div>
+        <div>
+          <strong>GPO Distributor</strong>
+          <span id="server-version">Backend</span>
+        </div>
+      </div>
+      <nav class="nav-list" aria-label="Hauptnavigation">
+        <button class="nav-item active" data-route="dashboard">
+          <span class="nav-icon">⌂</span><span>Übersicht</span>
+        </button>
+        <button class="nav-item" data-route="policies">
+          <span class="nav-icon">▤</span><span>Richtlinien</span><span id="nav-policy-count" class="nav-count">0</span>
+        </button>
+        <button class="nav-item" data-route="profiles">
+          <span class="nav-icon">◫</span><span>Profile</span><span id="nav-profile-count" class="nav-count">0</span>
+        </button>
+        <button class="nav-item" data-route="clients">
+          <span class="nav-icon">◇</span><span>Clients</span><span id="nav-client-count" class="nav-count">0</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="connection-state"><span class="status-dot"></span> Verbunden</div>
+        <button id="logout-button" class="button ghost dark wide" type="button">Abmelden</button>
+      </div>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar">
+        <div>
+          <p id="page-eyebrow" class="eyebrow">Verwaltung</p>
+          <h1 id="page-title">Übersicht</h1>
+        </div>
+        <div class="topbar-actions">
+          <span id="last-refresh" class="refresh-time"></span>
+          <button id="refresh-button" class="button secondary" type="button">Aktualisieren</button>
+          <button id="primary-action" class="button primary hidden" type="button"></button>
+        </div>
+      </header>
+      <main id="page-content" class="page-content" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <div id="modal-backdrop" class="modal-backdrop hidden" role="presentation">
+    <section id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <header class="modal-header">
+        <div>
+          <p id="modal-eyebrow" class="eyebrow"></p>
+          <h2 id="modal-title"></h2>
+        </div>
+        <button id="modal-close" class="icon-button close-button" type="button" aria-label="Dialog schließen">×</button>
+      </header>
+      <div id="modal-content" class="modal-content"></div>
+    </section>
+  </div>
+
+  <div id="confirm-backdrop" class="modal-backdrop hidden" role="presentation">
+    <section class="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+      <div class="danger-icon" aria-hidden="true">!</div>
+      <h2 id="confirm-title">Aktion bestätigen</h2>
+      <p id="confirm-message"></p>
+      <div class="dialog-actions">
+        <button id="confirm-cancel" class="button secondary" type="button">Abbrechen</button>
+        <button id="confirm-submit" class="button danger" type="button">Löschen</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script src="/ui/app.js" defer></script>
+</body>
+</html>

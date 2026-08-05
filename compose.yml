@@ -1,0 +1,65 @@
+name: gpo-distributor
+
+services:
+  gpo-server:
+    image: "${GPO_SERVER_IMAGE:-gpo-distributor-server:0.2.1}"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: "${GPO_SERVER_VERSION:-0.2.1}"
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 25s
+
+    environment:
+      GPO_SERVER_LISTEN: ":8443"
+      GPO_SERVER_DATA: "/data"
+      GPO_SERVER_ADMIN_TOKEN: "${GPO_SERVER_ADMIN_TOKEN:?Set GPO_SERVER_ADMIN_TOKEN in .env}"
+      GPO_SERVER_CLIENT_TOKEN: "${GPO_SERVER_CLIENT_TOKEN:?Set GPO_SERVER_CLIENT_TOKEN in .env}"
+      GPO_SERVER_SIGNING_KEY: "${GPO_SERVER_SIGNING_KEY:?Set GPO_SERVER_SIGNING_KEY in .env}"
+      GPO_SERVER_TLS_CERT: "${GPO_SERVER_TLS_CERT:-}"
+      GPO_SERVER_TLS_KEY: "${GPO_SERVER_TLS_KEY:-}"
+
+    command:
+      - -max-upload
+      - "${GPO_SERVER_MAX_UPLOAD:-536870912}"
+
+    ports:
+      - "${GPO_SERVER_BIND_ADDRESS:-0.0.0.0}:${GPO_SERVER_PORT:-8443}:8443"
+
+    volumes:
+      - gpo-data:/data
+      # Keep this mount even when TLS is terminated by a reverse proxy.
+      # The directory may remain empty when both TLS variables are blank.
+      - ./tls:/tls:ro
+
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          if [ -n "$${GPO_SERVER_TLS_CERT:-}" ]; then
+            wget -q --no-check-certificate -O /dev/null https://127.0.0.1:8443/healthz;
+          else
+            wget -q -O /dev/null http://127.0.0.1:8443/healthz;
+          fi
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  gpo-data:
+    name: "${GPO_SERVER_DATA_VOLUME:-gpo-distributor-data}"
