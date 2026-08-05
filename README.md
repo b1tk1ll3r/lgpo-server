@@ -103,13 +103,13 @@ Linux/macOS:
 
 ```bash
 make test
-make build VERSION=0.2.1
+make build VERSION=0.2.2
 ```
 
 Windows PowerShell:
 
 ```powershell
-.\scripts\Build.ps1 -Version 0.2.1
+.\scripts\Build.ps1 -Version 0.2.2
 ```
 
 Erzeugte Dateien:
@@ -279,6 +279,19 @@ Optionaler Sonderfall: trotz identischem semantischem Hash eine Version erzwinge
 ```
 
 Das Skript verwendet `Backup-GPO`, erstellt ein ZIP mit korrektem Sicherungswurzelverzeichnis und lädt es hoch. Bei unverändertem Richtlinieninhalt wird keine neue Version erzeugt.
+
+`GpoName` ist der exakte Anzeigename im Active Directory. `PolicyName` ist dagegen der technische Name im Repository und muss `^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$` entsprechen. Seit Version 0.2.2 ist `PolicyName` optional: Fehlt er oder enthält er Leerzeichen, Umlaute oder andere unzulässige Zeichen, erzeugt das Skript automatisch einen sicheren Namen und zeigt ihn vor dem Upload an. Mit `-StrictPolicyName` kann stattdessen das frühere strikte Verhalten erzwungen werden.
+
+Beispiel:
+
+```powershell
+# Wird automatisch als "Server-Windows-Firewall" veröffentlicht.
+.\scripts\Export-And-Publish.ps1 `
+  -GpoName 'Server - Windows Firewall' `
+  -ServerUrl 'https://gpo.example.org:8443' `
+  -AdminToken $env:GPO_ADMIN_TOKEN `
+  -GpoCtl '.\bin\gpoctl-windows-amd64.exe'
+```
 
 ## Profil erstellen
 

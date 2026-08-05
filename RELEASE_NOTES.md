@@ -1,3 +1,15 @@
+# Release 0.2.2
+
+Export and naming robustness update.
+
+Included:
+
+- `Export-And-Publish.ps1` now treats `GpoName` and repository `PolicyName` as separate concepts.
+- `PolicyName` is optional and is automatically normalized when it contains spaces, umlauts, path separators or other unsupported characters.
+- The resolved repository name is printed before the AD backup and upload start.
+- `-StrictPolicyName` retains fail-fast validation when automatic normalization is not desired.
+- `gpoctl` validates policy and profile names locally and reports the offending value before sending an HTTP request.
+
 # Release 0.2.1
 
 Container deployment update.

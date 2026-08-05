@@ -13,6 +13,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -20,6 +21,8 @@ import (
 )
 
 var version = "dev"
+
+var validRepositoryName = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$`)
 
 type clientConfig struct {
 	server   string
@@ -81,6 +84,9 @@ func upload(args []string) error {
 	if *policy == "" || *file == "" {
 		return errors.New("-policy and -file are required")
 	}
+	if err := validateRepositoryName("-policy", *policy); err != nil {
+		return err
+	}
 	f, err := os.Open(*file)
 	if err != nil {
 		return err
@@ -135,11 +141,17 @@ func profileSet(args []string) error {
 	if *name == "" || len(policies) == 0 {
 		return errors.New("-name and at least one -policy are required")
 	}
+	if err := validateRepositoryName("-name", *name); err != nil {
+		return err
+	}
 	refs := make([]model.ProfilePolicy, 0, len(policies))
 	for _, value := range policies {
 		policy, ver, ok := strings.Cut(value, "@")
 		if !ok || policy == "" || ver == "" {
 			return fmt.Errorf("invalid policy reference %q; expected name@latest or name@version", value)
+		}
+		if err := validateRepositoryName("policy reference", policy); err != nil {
+			return err
 		}
 		refs = append(refs, model.ProfilePolicy{Policy: policy, Version: ver})
 	}
@@ -170,6 +182,13 @@ func getList(args []string, path string) error {
 	}
 	req.Header.Set("Authorization", "Bearer "+cfg.token)
 	return doAndPrint(cfg, req)
+}
+
+func validateRepositoryName(label, value string) error {
+	if !validRepositoryName.MatchString(value) {
+		return fmt.Errorf("invalid %s %q: must match %s (maximum 64 characters; no spaces)", label, value, validRepositoryName.String())
+	}
+	return nil
 }
 
 func validateClient(server, token string, insecure bool) (clientConfig, error) {

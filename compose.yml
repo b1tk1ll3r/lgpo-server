@@ -2,12 +2,12 @@ name: gpo-distributor
 
 services:
   gpo-server:
-    image: "${GPO_SERVER_IMAGE:-gpo-distributor-server:0.2.1}"
+    image: "${GPO_SERVER_IMAGE:-gpo-distributor-server:0.2.2}"
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        VERSION: "${GPO_SERVER_VERSION:-0.2.1}"
+        VERSION: "${GPO_SERVER_VERSION:-0.2.2}"
     restart: unless-stopped
     init: true
     stop_grace_period: 25s
