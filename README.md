@@ -1,4 +1,4 @@
-# GPO Distributor
+ # GPO Distributor 
 
 Ein kleines, dateibasiertes System zur zentralen Verteilung von Microsoft-GPO-Sicherungen an Windows-Server, die nicht Mitglied derselben Active-Directory-Domäne sind.
 
